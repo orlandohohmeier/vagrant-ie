@@ -38,6 +38,36 @@ $ vagrant destroy ${environment}
 For a full list of commands and vagrant options, please see:
 (https://docs.vagrantup.com/v2/cli/index.html[https://docs.vagrantup.com/v2/cli/index.html]
 
+## Configuration
+
+### `hostsfile`
+
+You can either adjust the `hostfile.erb` to your needs or use a different template by defining the `DEBUG_IE_HOSTSFILE_TEMPLATE` environment variable.
+
+_Note: 10.0.2.2 always points to the host environment._
+
+#### Example: Docker Host (docker-machine)
+
+This example illustrates how to use a custom template to point the debug environment to local running docker-machine.
+
+1. Create a file named `dockerhost.erb` with the new template by running this command:
+
+```shell
+$ echo "<%= ENV['DOCKER_HOST'][/([\d.]+)/,1] %> example.docker" > dockerhost.erb
+```
+
+2. Define the `DEBUG_IE_HOSTSFILE_TEMPLATE environment variable and point it to the new template.
+
+```shell
+$ export DEBUG_IE_HOSTSFILE_TEMPLATE="$(pwd)/dockerhost.erb"
+```
+
+3. Use the following command creates and provisions the debugging environments.
+
+```shell
+$ vagrant up ${environment}
+```
+
 ## License
 
 MIT
